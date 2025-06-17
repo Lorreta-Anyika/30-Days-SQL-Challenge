@@ -1,4 +1,4 @@
--- Amazon Interview Practice 9/06/2025
+-- Amazon Interview Practice 18/06/2025
 
 
 /* 1. You have two tables: Product and Supplier.
@@ -10,3 +10,93 @@
 
 -- Write an SQL query to find the name of the product with the highest 
 -- price in each country.
+
+----------------------------------------
+MY SOLUTION
+----------------------------------------
+DROP DATABASE IF EXISTS `Thirty_Days_SQL_Challenge`;
+CREATE DATABASE `Thirty_Days_SQL_Challenge`;
+USE Thirty_Days_SQL_Challenge;
+
+DROP TABLE IF EXISTS suppliers;
+CREATE TABLE suppliers(
+		supplier_id int primary key,
+        supplier_name varchar(25),
+        country varchar(25)
+	);
+
+DROP TABLE IF EXISTS product;
+create table product(
+            product_id int primary key,
+						product_name VARCHAR(25),
+            supplier_id INT,
+            price float,
+            FOREIGN KEY (supplier_id) REFERENCES suppliers(supplier_id)
+                       
+);
+
+INSERT INTO suppliers
+VALUES (100, 'lorreta', 'Nigeria'),
+		(101, 'james', 'Canada'),
+		(102, 'laura', 'India'),
+		(103, 'Mitchell', 'Nigeria'),
+		(104, 'zara', 'India'),
+		(105, 'maxwell', 'Canada');             
+	
+    INSERT INTO product
+    VALUES -- Insert updated product list
+INSERT INTO product
+VALUES 
+    -- Laptops
+    (301, 'MacBook Air M2', 100, 1199),
+    (302, 'Dell XPS 13', 101, 1099),
+    (303, 'HP Spectre x360', 102, 999),
+    (304, 'Lenovo ThinkPad X1', 103, 1149),
+    (305, 'Asus ZenBook Pro', 104, 1249),
+    (306, 'Acer Swift 5', 105, 849),
+    (307, 'Razer Blade 14', 100, 1999),
+    (308, 'LG Gram 16', 101, 1399),
+    (309, 'Infinix Zero Book', 102, 599),
+    (310, 'Tecno Megabook T1', 103, 549),
+
+    -- Tablets
+    (311, 'iPad Pro 11"', 104, 999),
+    (312, 'Samsung Galaxy Tab S8', 105, 799),
+    (313, 'Microsoft Surface Pro 9', 100, 1399),
+    (314, 'Huawei MatePad Pro', 101, 899),
+    (315, 'OnePlus Pad', 102, 649),
+    (316, 'Lenovo Tab P12 Pro', 103, 749),
+    (317, 'Google Pixel Tablet', 104, 699),
+
+    -- Phones
+    (318, 'Samsung Galaxy S23 Ultra', 105, 1299),
+    (319, 'Google Pixel 8 Pro', 100, 1099),
+    (320, 'iPhone 15 Pro Max', 101, 1499),
+    (321, 'OnePlus 11R', 102, 699),
+    (322, 'Tecno Camon 20 Premier', 103, 499),
+    (323, 'Infinix Zero 30 5G', 104, 459),
+
+    -- Smartwatches
+    (324, 'Apple Watch Series 9', 105, 499),
+    (325, 'Samsung Galaxy Watch 6', 100, 399),
+    (326, 'Fitbit Sense 2', 101, 299),
+    (327, 'Garmin Venu 2 Plus', 102, 449),
+
+    -- Accessories
+    (328, 'Logitech MX Master 3S Mouse', 103, 129),
+    (329, 'Apple Magic Keyboard', 104, 249),
+    (330, 'Anker PowerCore Power Bank', 105, 99);
+
+
+-- sql script
+SELECT product_name, price, country
+FROM (
+    SELECT 
+        p.product_name, 
+        p.price, 
+        s.country,
+        ROW_NUMBER() OVER (PARTITION BY s.country ORDER BY p.price DESC) AS rn
+    FROM product p 
+    JOIN suppliers s ON p.supplier_id = s.supplier_id
+) ranked
+WHERE rn = 1;
