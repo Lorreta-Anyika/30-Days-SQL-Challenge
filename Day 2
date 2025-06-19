@@ -1,0 +1,60 @@
+/* 
+You have two tables: Customer and Transaction.
+- Customer Table Columns: Customer_id, Customer_Name, Registration_Date
+- Transaction Table Columns: Transaction_id, Customer_id, Transaction_Date, Amount
+
+-- Write an SQL query to calculate the total transaction amount for each customer for the current year. 
+The output should contain Customer_Name and the total amount.
+*/
+
+-- Create customer Table
+CREATE TABLE Customer (
+    Customer_id INT PRIMARY KEY,
+    Customer_Name VARCHAR(100) NOT NULL,
+    Registration_Date DATE
+);
+
+-- create Transaction Table
+CREATE TABLE Transaction (
+    Transaction_id INT PRIMARY KEY,
+    Customer_id INT,
+    Transaction_Date DATE,
+    Amount DECIMAL(10, 2),
+    FOREIGN KEY (Customer_id) REFERENCES Customer(Customer_id)
+);
+
+--Insert values into customer table
+INSERT INTO Customer (Customer_id, Customer_Name, Registration_Date)
+VALUES 
+    (1, 'Lorreta', '2022-05-15'),
+    (2, 'James', '2023-03-12'),
+    (3, 'Zara', '2021-11-03'),
+    (4, 'Mitchell', '2024-08-21'),
+    (5, 'Laura', '2023-12-01');
+
+--insert values into transaction table
+INSERT INTO Transaction (Transaction_id, Customer_id, Transaction_Date, Amount)
+VALUES
+    (101, 1, '2025-01-05', 120.00),
+    (102, 1, '2025-03-15', 200.00),
+    (103, 2, '2024-12-20', 150.00),
+    (104, 2, '2025-02-11', 300.00),
+    (105, 3, '2025-04-05', 250.00),
+    (106, 3, '2023-07-10', 180.00),
+    (107, 4, '2025-05-01', 400.00),
+    (108, 5, '2025-06-15', 100.00),
+    (109, 5, '2024-10-21', 90.00),
+    (110, 5, '2025-03-22', 200.00);
+
+--SQL SCRIPT
+SELECT 
+    c.Customer_Name, 
+    SUM(t.Amount) AS Total_Amount
+FROM 
+    Customer c
+JOIN 
+    Transaction t ON c.Customer_id = t.Customer_id
+WHERE 
+    YEAR(t.Transaction_Date) = YEAR(CURDATE())
+GROUP BY 
+    c.Customer_Name;
