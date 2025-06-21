@@ -49,3 +49,15 @@ INSERT INTO page_likes (user_id, page_id, liked_date) VALUES
 (204, 1003, '2023-03-03 18:45:00'),
 (205, 1001, '2023-03-10 12:00:00'),
 (206, 1002, '2023-04-25 16:00:00');
+
+--------------------------------------
+solution
+--------------------------------------
+SELECT * FROM pages;
+SELECT * FROM page_likes;
+
+SELECT p.page_id, p.page_name
+FROM pages p
+LEFT JOIN page_likes pl on p.page_id = pl.page_id
+WHERE pl.liked_date IS NULL
+ORDER BY p.page_id;
