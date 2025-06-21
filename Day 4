@@ -1,0 +1,48 @@
+/* 
+Given:
+A table named events that logs interactions for various mobile apps. 
+Each record contains the app_id, type of event ('impression' or 'click'), and the event's timestamp.
+
+Task:
+Write a query to calculate the Click-Through Rate (CTR) for each app_id for the year 2022, rounded to 2 decimal places.
+
+CTR Formula:
+CTR = (100.0 * Number of clicks) / total number of impressions
+
+Requirements:
+
+Only consider records from the year 2022.
+
+Return the following columns: app_id, ctr (click-through rate rounded to 2 decimal places)
+
+If an app has zero impressions, avoid division by zero.
+
+*/
+
+CREATE TABLE events (
+    app_id INTEGER,
+    event_type VARCHAR(10),
+    timestamp DATETIME
+);
+
+INSERT INTO events (app_id, event_type, timestamp) VALUES
+(101, 'impression', '2022-03-10 09:20:00'),
+(101, 'click', '2022-03-10 09:21:30'),
+(101, 'impression', '2022-03-10 09:22:00'),
+(101, 'impression', '2022-03-10 09:23:00'),
+(102, 'impression', '2022-04-12 10:10:10'),
+(102, 'impression', '2022-04-12 10:12:00'),
+(102, 'click', '2022-04-12 10:12:30'),
+(102, 'click', '2022-04-12 10:15:00'),
+(103, 'impression', '2022-05-05 08:00:00'),
+(103, 'impression', '2022-05-05 08:05:00');
+------------------------------------------------------------
+-- SQL query
+SELECT 
+    app_id,
+    ROUND((100.0 * SUM(CASE WHEN event_type = 'click' THEN 1 ELSE 0 END)) / COUNT(*), 2) AS ctr
+FROM events
+WHERE YEAR(timestamp) = 2022
+GROUP BY app_id;
+
+
