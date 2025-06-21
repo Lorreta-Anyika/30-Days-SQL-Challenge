@@ -1,0 +1,51 @@
+/* 
+Table 1: pages
+Stores information about each Facebook page.
+
+Columns:
+page_id, page_name
+
+🟨 Table 2: page_likes
+Tracks which user liked which page and when.
+
+Columns:
+user_id, page_id, liked_date
+
+Write a SQL query to retrieve the IDs of the Facebook pages that have zero likes. 
+The output should be sorted in ascending order based on the page IDs.
+*/
+
+--create the pages table
+CREATE TABLE pages (
+  page_id INT PRIMARY KEY, 
+  page_name VARCHAR(30)
+);
+
+--create the page_likes table
+CREATE TABLE page_likes(
+	user_id INT PRIMARY KEY,
+    page_id INT, 
+    liked_date DATETIME,
+    FOREIGN KEY (page_id) REFERENCES pages(page_id)
+);
+
+--insert values into the pages table:
+```sql
+INSERT INTO pages (page_id, page_name) VALUES
+(1001, 'Data Science Daily'),
+(1002, 'AI Revolution'),
+(1003, 'SQL Pro Tips'),
+(1004, 'Tech for Africa'),
+(1005, 'Daily Coding Challenges'),
+(1006, 'Remote Work Hacks');
+```
+
+----insert values into the page_likes table:
+```sql
+INSERT INTO page_likes (user_id, page_id, liked_date) VALUES
+(201, 1001, '2023-01-12 10:00:00'),
+(202, 1002, '2023-01-15 14:30:00'),
+(203, 1001, '2023-02-01 09:20:00'),
+(204, 1003, '2023-03-03 18:45:00'),
+(205, 1001, '2023-03-10 12:00:00'),
+(206, 1002, '2023-04-25 16:00:00');
