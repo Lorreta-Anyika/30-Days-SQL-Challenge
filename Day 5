@@ -1,0 +1,45 @@
+Given:
+A table named Salaries that contains employee
+salary information, including each employee's name, department, and salary.
+
+Task:
+Write an SQL query to calculate the absolute difference between the highest salary 
+in the Marketing department and the highest salary in the Engineering department.
+-------------------------------------------------------
+solution
+------------------------------------------------------
+-- DDL for Salaries table
+CREATE TABLE Salaries (
+    emp_name VARCHAR(50),
+    department VARCHAR(50),
+    salary INT,
+    PRIMARY KEY (emp_name, department)
+);
+
+-- DML for Salaries table
+INSERT INTO Salaries (emp_name, department, salary) VALUES
+('Amara', 'Engineering', 76000),
+('Jide', 'Marketing', 48000),
+('Ngozi', 'Engineering', 89000),
+('Ifeoma', 'Marketing', 72000),
+('Chike', 'Engineering', 66000),
+('Fatima', 'Marketing', 60000),
+('Uche', 'Engineering', 93000),
+('Bola', 'Marketing', 52000),
+('Tunde', 'Engineering', 58000),
+('Halima', 'Marketing', 75000);
+
+WITH marketing_max AS (
+    SELECT MAX(salary) AS marketing_salary
+    FROM Salaries
+    WHERE department = 'Marketing'
+),
+engineering_max AS (
+    SELECT MAX(salary) AS engineering_salary
+    FROM Salaries
+    WHERE department = 'Engineering'
+)
+
+SELECT 
+    ABS(engineering_max.engineering_salary - marketing_max.marketing_salary) AS salary_difference
+FROM marketing_max, engineering_max;
