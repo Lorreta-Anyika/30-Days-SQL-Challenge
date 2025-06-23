@@ -1,0 +1,61 @@
+/* IBM Data Analyst SQL Question
+
+Customer Segmentation Problem:
+You have two tables: customers and orders.
+
+customers table has columns: 
+customer_id, customer_name, age, gender.
+orders table has columns: 
+order_id, customer_id, order_date, total_amount.
+
+
+Write an SQL query to find the average order amount 
+for male and female customers separately
+return the results with 2 DECIMAL.
+*/
+
+-- Create the customers table
+CREATE TABLE customers (
+    customer_id INT PRIMARY KEY,
+    customer_name VARCHAR(255),
+    age INT,
+    gender VARCHAR(10)
+);
+
+-- Create the orders table
+CREATE TABLE orders (
+    order_id INT PRIMARY KEY,
+    customer_id INT,
+    order_date DATE,
+    total_amount DECIMAL(10, 2),
+    FOREIGN KEY (customer_id) REFERENCES customers(customer_id)
+);
+
+-- Insert values into the customers table
+INSERT INTO customers (customer_id, customer_name, age, gender)
+VALUES
+    (101, 'Amaka Okafor', 28, 'Female'),
+    (102, 'David Obi', 32, 'Male'),
+    (103, 'Lilian Yusuf', 24, 'Female'),
+    (104, 'Seyi Adewale', 45, 'Male');
+
+-- Insert values into the orders table
+INSERT INTO orders (order_id, customer_id, order_date, total_amount)
+VALUES
+    (201, 101, '2023-02-10', 310.20),
+    (202, 102, '2022-11-25', 420.00),
+    (203, 103, '2023-03-18', 275.45),
+    (204, 104, '2023-04-05', 150.75),
+    (205, 101, '2021-06-12', 330.10),
+    (206, 102, '2023-01-19', 198.30),
+    (207, 103, '2023-08-22', 450.60),
+    (208, 104, '2024-01-01', 120.00),
+    (209, 104, '2023-07-11', 230.50),
+    (210, 104, '2023-10-21', 310.40);
+----------------------------------------------
+
+SELECT c.gender, 
+       ROUND(AVG(o.total_amount), 2) AS avg_order_amount
+FROM customers c
+JOIN orders o ON c.customer_id = o.customer_id
+GROUP BY c.gender;
