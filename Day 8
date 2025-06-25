@@ -1,0 +1,46 @@
+/* Uber Data Analyst SQL Question: Third Transaction Per User
+Given:
+You are provided with a table called transactions that contains data on user spending activity. 
+The table has columns of user_id, spend, transaction_date.
+
+Question:
+Write a SQL query to obtain the third transaction of every user. 
+Output the user id, spend, and transaction date.
+
+*/
+
+-- Create the transactions table
+CREATE TABLE transactions (
+    user_id INT,
+    spend DECIMAL(10, 2),
+    transaction_date TIMESTAMP
+);
+
+-- Insert new data into transactions table
+INSERT INTO transactions (user_id, spend, transaction_date) VALUES
+(201, 75.00, '2023-01-02 09:15:00'),
+(201, 120.50, '2023-01-05 14:20:00'),
+(201, 65.00, '2023-01-10 11:00:00'),   -- third transaction for user 201
+(202, 40.00, '2023-02-01 08:00:00'),
+(202, 80.00, '2023-02-03 12:30:00'),
+(203, 50.00, '2023-03-05 16:45:00'),
+(203, 25.00, '2023-03-06 10:15:00'),
+(203, 40.00, '2023-03-07 14:10:00'),   -- third transaction for user 203
+(203, 60.00, '2023-03-10 09:00:00'),
+(204, 90.00, '2023-04-01 13:30:00'),
+(204, 110.00, '2023-04-02 15:00:00'),
+(205, 35.00, '2023-05-05 11:25:00'),
+(205, 45.00, '2023-05-06 12:15:00'),
+(205, 55.00, '2023-05-07 13:45:00');   -- third transaction for user 205
+
+SELECT user_id, 
+      spend, 
+      transaction_date
+FROM
+( SELECT user_id, 
+        spend, 
+        transaction_date,
+        ROW_NUMBER OVER (OARTITION BY user_id ORDER BY transaction_date) rn
+FROM transaction) tx
+WHERE rn = 3
+
