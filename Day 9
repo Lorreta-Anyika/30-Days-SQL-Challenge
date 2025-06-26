@@ -1,0 +1,69 @@
+/*
+You are provided with a table product_sales that tracks revenue data for different products across multiple years.
+
+the tables has columns: product_id, product_name, year and revenue
+
+
+Question:
+Find the top 5 products whose revenue has decreased in comparison to the 
+previous year (both 2022 and 2023). Return the product name, 
+revenue for the previous year, revenue for the current year, 
+revenue decreased, and the decreased ratio (percentage).
+*/
+
+
+CREATE TABLE product_sales (
+    product_id INT,
+    product_name VARCHAR(50),
+    year INT,
+    revenue DECIMAL(12, 2)
+);
+
+INSERT INTO product_sales (product_id, product_name, year, revenue) VALUES
+(101, 'Alpha Watch', 2022, 50000.00),
+(101, 'Alpha Watch', 2023, 45000.00),  -- Decreased
+
+(102, 'Beta Phone', 2022, 120000.00),
+(102, 'Beta Phone', 2023, 100000.00),  -- Decreased
+
+(103, 'Gamma Tablet', 2022, 80000.00),
+(103, 'Gamma Tablet', 2023, 85000.00),  -- Increased
+
+(104, 'Delta Laptop', 2022, 60000.00),
+(104, 'Delta Laptop', 2023, 55000.00),  -- Decreased
+
+(105, 'Epsilon Headphones', 2022, 30000.00),
+(105, 'Epsilon Headphones', 2023, 25000.00),  -- Decreased
+
+(106, 'Zeta Camera', 2022, 45000.00),
+(106, 'Zeta Camera', 2023, 43000.00),  -- Decreased
+
+(107, 'Eta Speaker', 2022, 20000.00),
+(107, 'Eta Speaker', 2023, 22000.00);  -- Increased
+
+
+WITH sales_2022 AS (
+    SELECT product_name, product_id, revenue AS rev22
+    FROM product_sales 
+    WHERE year = 2022
+),
+
+sales_2023 AS (
+    SELECT product_name, product_id, revenue AS rev23
+    FROM product_sales 
+    WHERE year = 2023
+)
+
+SELECT 
+    s22.product_name,
+    s22.rev22,
+    s23.rev23,
+    (s22.rev22 - s23.rev23) AS decreased_rev,
+    ROUND(100.0 * (s22.rev22 - s23.rev23) / s22.rev22, 2) AS decreased_rev_percent
+FROM sales_2022 s22
+JOIN sales_2023 s23
+    ON s22.product_id = s23.product_id
+WHERE s23.rev23 < s22.rev22
+ORDER BY decreased_rev DESC
+LIMIT 5;
+
