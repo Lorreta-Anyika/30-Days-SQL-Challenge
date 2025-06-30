@@ -1,0 +1,63 @@
+/*
+	
+Question:
+TWIITER (X) SQL QUESTION
+
+Given the table  called tweets and contains the following columns:
+
+tweet_id — the unique ID for each tweet
+
+user_id — the ID of the user who posted the tweet
+
+msg — the content of the tweet
+
+tweet_date — the date and time when the tweet was posted
+
+Write a query to obtain a histogram of tweets posted per user in 2022. 
+Output the tweet count per user as the bucket and the number of Twitter users who fall into that bucket.
+
+
+-- Create tweets table
+CREATE TABLE tweets (
+    tweet_id INTEGER,
+    user_id INTEGER,
+    msg VARCHAR(255),
+    tweet_date TIMESTAMP
+);
+
+-- Insert sample records
+INSERT INTO tweets (tweet_id, user_id, msg, tweet_date) VALUES
+(300001, 111, 'Launching new product soon!', '2022-04-05 00:00:00'),
+(300002, 111, 'Big announcements coming!', '2022-05-10 00:00:00'),
+(300003, 254, 'Working remotely is underrated.', '2022-06-15 00:00:00'),
+(300004, 254, 'Why are meetings always emails that could have been avoided?', '2022-07-20 00:00:00'),
+(300005, 148, 'I just realized coffee fuels 90% of my productivity.', '2022-08-25 00:00:00'),
+(300006, 333, 'First tweet of the year!', '2022-09-01 00:00:00'),
+(300007, 333, 'SQL practice all day.', '2022-09-02 00:00:00'),
+(300008, 333, 'Learning Data Engineering step by step.', '2022-09-03 00:00:00'),
+(300009, 444, 'One tweet wonder.', '2022-10-10 00:00:00'),
+(300010, 555, 'Excited to start my tech journey.', '2022-11-11 00:00:00'),
+(300011, 555, 'Attending a virtual conference today.', '2022-11-12 00:00:00');
+
+
+*/
+
+------------------------------------------------
+MY SOLUTION
+---------------------------------------------
+SELECT tweet_count, COUNT(*) AS num_users
+FROM (
+    SELECT user_id, COUNT(tweet_id) AS tweet_count
+    FROM tweets
+    WHERE EXTRACT(YEAR FROM tweet_date) = 2022
+    GROUP BY user_id
+) AS user_tweet_counts
+GROUP BY tweet_count
+ORDER BY tweet_count;
+
+
+
+
+
+-- ----------------------------------------------
+-- My solution
