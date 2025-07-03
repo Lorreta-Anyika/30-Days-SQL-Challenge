@@ -1,0 +1,38 @@
+-- Amazon Interview Question for enty Business Analyst!
+-- ---------------------------------------------
+/*
+Question:: Given the reviews table with columns of review_id, user_id, submit_date, product_id, stars.
+
+Write a query to retrieve 
+the average star rating for each product, grouped by month. 
+The output should display the month as a numerical value, 
+product ID, and average star rating rounded to two decimal places. 
+Sort the output first by month and then by product ID.
+*/
+
+INSERT INTO reviews (review_id, user_id, submit_date, product_id, stars) VALUES
+(2001, 321, '2022-06-15 00:00:00', 50001, 5),
+(2002, 654, '2022-07-08 00:00:00', 50001, 4),
+(2003, 987, '2022-07-20 00:00:00', 69852, 2),
+(2004, 432, '2022-08-01 00:00:00', 50001, 3),
+(2005, 876, '2022-08-18 00:00:00', 69852, 4),
+(2006, 543, '2022-09-05 00:00:00', 50001, 2),
+(2007, 678, '2022-09-15 00:00:00', 69852, 5),
+(2008, 345, '2022-10-03 00:00:00', 50001, 3),
+(2009, 789, '2022-10-27 00:00:00', 69852, 4),
+(2010, 654, '2022-11-09 00:00:00', 50001, 4),
+(2011, 321, '2022-11-28 00:00:00', 69852, 2),
+(2012, 432, '2022-12-05 00:00:00', 50001, 5),
+(2013, 876, '2022-12-15 00:00:00', 69852, 3),
+(2014, 543, '2023-01-10 00:00:00', 50001, 4),
+(2015, 678, '2023-01-25 00:00:00', 69852, 3),
+(2016, 345, '2023-02-01 00:00:00', 50001, 5),
+(2017, 789, '2023-02-12 00:00:00', 69852, 4);
+
+SELECT product id, 
+      month(submit_date) months,
+      Round(average(stars),2)
+from reviews
+group by month, product_id
+order by month, product_id
+
