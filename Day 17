@@ -1,0 +1,53 @@
+/*
+Facebook medium level SQL question for Data Analyst 
+
+Given a table called fb_posts with columns of post_id, user_id,
+ likes, comments, post_date.
+
+Question: Identify the top 3 posts with the highest engagement 
+(likes + comments) for each user on a Facebook page. Display 
+the user ID, post ID, engagement count, and rank for each post.
+*/
+use thirty_days_sql_challenge;
+DROP TABLE IF EXISTS fb_post;
+CREATE TABLE fb_post (
+	post_id INT PRIMARY KEY, 
+    user_id INT,
+	likes INT, 
+    comments INT, 
+    post_date DATE);
+    
+INSERT INTO fb_post (post_id, user_id, likes, comments, post_date) VALUES
+(1, 201, 40, 30, '2024-02-24'),
+(2, 201, 35, 12, '2024-02-26'),
+(3, 201, 25, 11, '2024-02-27'),
+(4, 202, 60, 12, '2024-02-24'),
+(5, 202, 20,10,  '2024-02-28'),
+(6, 203, 15, 13, '2024-02-20'),
+(7, 203, 30, 16,'2024-02-23'),
+(8, 203, 50,17, '2024-02-24'),
+(9, 203, 10, 12,'2024-02-25'),
+(10, 204, 70,20, '2024-02-26'),
+(11, 205, 90,25, '2024-02-10'),
+(12, 205, 40,12, '2024-02-12'),
+(13, 205, 20, 15, '2024-02-13');
+
+select * from fb_post;
+
+WITH ranked_post AS (
+SELECT post_id, 
+		user_id,
+		SUM(likes + comments) engagement_count,
+        row_number() over(partition by user_id ORDER BY SUM(likes + comments) desc) rn,
+        DENSE_RANK() OVER(partition by user_id ORDER BY SUM(likes + comments) desc) ranks
+FROM fb_post
+GROUP BY user_id, post_id
+ORDER BY user_id, engagement_count DESC)
+
+select user_id, 
+		post_id,
+        engagement_count,
+        ranks
+FROM ranked_post
+WHERE rn <=3;
+
