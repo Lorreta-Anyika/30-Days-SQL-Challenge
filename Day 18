@@ -1,0 +1,75 @@
+/*
+-- Q.1 LinkedIn Data Analyst Interview question 
+
+Assume you're given a table containing job postings 
+from various companies on the LinkedIn platform. 
+The table has columns of job_id, company_id,title, description.
+
+Write a query to retrieve the count of companies that have posted duplicate job listings.
+
+Definition:
+
+Duplicate job listings are defined as two job listings 
+within the same company that share identical titles and descriptions.
+*/
+
+CREATE TABLE job_posting (
+	job_id int primary key,
+    company_id int,
+    title TEXT, 
+    descriptions TEXT);
+    
+ 
+INSERT INTO job_posting(job_id, company_id, title, descriptions)
+VALUES
+    -- Duplicate listings (same title + description within same company)
+    (1001, 100, 'Data Analyst', 'Analyzes data to help companies make informed business decisions.'),
+    (1002, 100, 'Data Analyst', 'Analyzes data to help companies make informed business decisions.'),
+    
+    (1003, 101, 'Business Analyst', 'Analyzes business needs and recommends solutions.'),
+    (1004, 101, 'Business Analyst', 'Analyzes business needs and recommends solutions.'),
+    
+    (1005, 102, 'Software Developer', 'Designs and codes software applications.'),
+    (1006, 102, 'Software Developer', 'Designs and codes software applications.'),
+
+    (1007, 103, 'Product Manager', 'Manages product development lifecycle.'),
+    (1008, 103, 'Product Manager', 'Manages product development lifecycle.'),
+
+    -- Unique listings (same title but different description or company)
+    (1009, 104, 'Data Analyst', 'Collects, cleans, and interprets large datasets.'),
+    (1010, 105, 'Data Analyst', 'Helps in decision making using data trends.'),
+    (1011, 106, 'Business Analyst', 'Evaluates processes to improve efficiency.'),
+
+    -- Same company, same title, different description
+    (1012, 107, 'QA Engineer', 'Tests software for bugs and usability issues.'),
+    (1013, 107, 'QA Engineer', 'Writes test scripts and automation tools.'),
+
+    -- Different roles, same company
+    (1014, 108, 'UI/UX Designer', 'Designs intuitive user interfaces and experiences.'),
+    (1015, 108, 'Frontend Developer', 'Implements UI components in code.'),
+    
+    -- Another duplicate
+    (1016, 109, 'Machine Learning Engineer', 'Builds ML models for real-world applications.'),
+    (1017, 109, 'Machine Learning Engineer', 'Builds ML models for real-world applications.'),
+
+    -- Non-duplicate, completely different roles
+    (1018, 110, 'Technical Writer', 'Creates documentation and manuals.'),
+    (1019, 111, 'HR Specialist', 'Manages recruitment and employee relations.'),
+    (1020, 112, 'Marketing Analyst', 'Analyzes market trends and campaign effectiveness.'),
+    
+    -- One more duplicate for variety
+    (1021, 113, 'Data Engineer', 'Builds data pipelines and optimizes data flow.'),
+    (1022, 113, 'Data Engineer', 'Builds data pipelines and optimizes data flow.');
+    
+    select * from job_posting;
+    
+    SELECT COUNT(1) cnt_company
+    FROM
+    (
+    SELECT company_id, title, descriptions, COUNT(1) AS total_job_posted
+    FROM job_posting
+    GROUP BY 1,2,3
+    having COUNT(1) > 1
+    ) AS xt
+    
+    
