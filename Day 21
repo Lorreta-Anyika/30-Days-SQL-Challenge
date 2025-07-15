@@ -1,0 +1,42 @@
+/*
+-- Zomato Business Analyst interview question 
+
+Given a table called the  order_details with 
+columns of  order_id, del_partner, predicted_time, delivery_time;
+
+-- How many delayed orders does each delivery partner have, 
+considering the predicted delivery time and the actual delivery time?
+*/
+
+CREATE TABLE order_detail (
+	order_id INT, 
+    del_partner VARCHAR(10), 
+    predicted_time DATETIME, 
+    delivery_time DATETIME );
+    
+INSERT INTO order_detail VALUES 
+	 (20, 'Partner A', '2024-03-01 09:15:00', '2024-03-01 09:50:00'),
+    (21, 'Partner B', '2024-03-01 10:30:00', '2024-03-01 11:20:00'),
+    (22, 'Partner C', '2024-03-01 11:45:00', '2024-03-01 12:30:00'),
+    (23, 'Partner A', '2024-03-01 13:00:00', '2024-03-01 13:40:00'),
+    (24, 'Partner B', '2024-03-01 14:15:00', '2024-03-01 15:00:00'),
+    (25, 'Partner C', '2024-03-01 15:30:00', '2024-03-01 16:20:00'),
+    (26, 'Partner A', '2024-03-01 16:45:00', '2024-03-01 17:30:00'),
+    (27, 'Partner B', '2024-03-01 18:00:00', '2024-03-01 18:50:00'),
+    (28, 'Partner C', '2024-03-01 19:10:00', '2024-03-01 19:55:00');
+    
+SELECT * FROM order_detail;
+
+SELECT del_partner,
+		count(order_id) as cnt_of_delay
+FROM order_detail
+WHERE predicted_time < delivery_time
+GROUP BY del_partner;
+
+SELECT order_id, 
+		del_partner, 
+        predicted_time, 
+        delivery_time,
+        TIMESTAMPDIFF(MINUTE, predicted_time, delivery_time) AS diff
+FROM order_detail
+WHERE predicted_time < delivery_time;
