@@ -1,0 +1,42 @@
+-- Flipkart Data Analyst Interview Questions
+-- Question: Write an SQL query to 
+-- fetch user IDs that have only 
+-- bought both 'Burger' and 'Cold Drink' items.
+
+-- Expected Output Columns: user_id
+use thirty_days_sql_challenge;
+
+-- DROP THE TABLE IF IT EXISTS IN THE DB
+DROP TABLE IF EXISTS orders;
+
+-- create a NEW table for the challenge
+CREATE TABLE orders (
+	user_id INT,
+    item_ordered VARCHAR(20));
+    
+-- INSERT VALUES INTO THE TABLE
+INSERT INTO orders VALUES
+	('1', 'Pizza'),
+('1', 'Burger'),
+('2', 'Cold Drink'),
+('2', 'Burger'),
+('3', 'Burger'),
+('3', 'Cold Drink'),
+('4', 'Pizza'),
+('4', 'Cold Drink'),
+('5', 'Cold Drink'),
+('6', 'Burger'),
+('6', 'Cold Drink'),
+('7', 'Pizza'),
+('8', 'Burger');
+
+-- retrieve all items in the table
+SELECT * FROM orders;
+
+SELECT user_id
+FROM orders
+-- WHERE item_ordered in ('Burger', 'Cold Drink') This is wrong!!!
+GROUP BY user_id
+HAVING COUNT(DISTINCT item_ordered) = 2 AND 
+SUM(CASE WHEN item_ordered in ('Burger', 'Cold Drink') then 1 else 0 END) = 2;
+
